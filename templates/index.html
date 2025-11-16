@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эпидемиологический Анализатор</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: #e9ecef;
+            border-bottom: 1px solid #dee2e6;
+            padding: 12px 15px;
+        }
+
+        .scroll-section {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .parameter-group {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .function-input {
+            width: 70px;
+            text-align: center;
+            margin: 0 3px;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        .graph-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            Эпидемиологический Анализатор
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link active" href="/">Главная</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+
+    <div class="card">
+        <div class="card-body text-center">
+            <h1 class="h3 mb-3">Эпидемиологический Анализатор</h1>
+            <p class="text-muted">Интерактивная система для анализа динамики распространения заболеваний</p>
+        </div>
+    </div>
+
+    <!-- ───────────────────────────────────────────── -->
+    <!--   ФОРМА 1 — РАССЧЁТ ДИНАМИКИ                   -->
+    <!-- ───────────────────────────────────────────── -->
+    <form method="POST">
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Начальные параметры</h5>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="randomizeValues()">
+                            Рандом (0-1)
+                        </button>
+                    </div>
+                    <div class="scroll-section">
+                        {% for key, param in v0.items() %}
+                        <div class="parameter-group">
+                            <label class="form-label fw-bold">{{ key }}: {{ param.name }}</label>
+                            <input type="number" step="0.01" class="form-control"
+                                   name="v0_{{ key }}" value="{{ param.value }}" min="0" max="1">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Коэффициенты нормализации</h5>
+                    </div>
+                    <div class="scroll-section">
+                        {% for key, param in c.items() %}
+                        <div class="parameter-group">
+                            <label class="form-label fw-bold">{{ key }}: {{ param.name }}</label>
+                            <input type="number" step="0.1" class="form-control"
+                                   name="c_{{ key }}" value="{{ param.value }}" min="1" max="100" readonly>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Математические функции f(x) = ax³ + bx² + cx + d</h5>
+            </div>
+            <div class="scroll-section">
+                <div class="row">
+                    {% for key, func in f.items() %}
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="parameter-group text-center">
+                            <h6 class="fw-bold mb-3">{{ key }} = f({{ func.L }})</h6>
+                            <div class="d-flex justify-content-center align-items-center flex-wrap">
+                                <input class="form-control function-input" type="number" step="0.1"
+                                       name="f_{{ key }}_a" value="{{ func.a }}">
+                                <span class="mx-1">{{ func.L }}³ +</span>
+                                <input class="form-control function-input" type="number" step="0.1"
+                                       name="f_{{ key }}_b" value="{{ func.b }}">
+                                <span class="mx-1">{{ func.L }}² +</span>
+                                <input class="form-control function-input" type="number" step="0.1"
+                                       name="f_{{ key }}_c" value="{{ func.c }}">
+                                <span class="mx-1">{{ func.L }} +</span>
+                                <input class="form-control function-input" type="number" step="0.1"
+                                       name="f_{{ key }}_d" value="{{ func.d }}">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-custom btn-lg">
+                Рассчитать динамику системы
+            </button>
+        </div>
+    </form>
+
+    {% if plot_data %}
+    <div class="graph-container">
+        <h3 class="text-center mb-4">Результаты анализа системы</h3>
+        <img src='data:image/png;base64,{{ plot_data }}' class="img-fluid"/>
+    </div>
+    {% endif %}
+
+    <!-- ───────────────────────────────────────────── -->
+    <!--   ФОРМА 2 — ПОЛЯРНЫЕ ДИАГРАММЫ (ОТДЕЛЬНАЯ)     -->
+    <!-- ───────────────────────────────────────────── -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Полярные диаграммы параметров</h5>
+        </div>
+        <div class="card-body">
+
+            <!-- ВАЖНО: ОТДЕЛЬНАЯ ФОРМА -->
+            <form id="polarPlotForm" method="POST">
+                <input type="hidden" name="polar_only" value="1">
+
+                <div class="scroll-section">
+                    <div class="row">
+                        {% for i in range(15) %}
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="parameter-group">
+                                {% set labels = ['L₁','L₂','L₃','L₄','L₅','L₆','L₇','L₈','L₉','L₁₀','L₁₁','L₁₂','L₁₃','L₁₄','L₁₅'] %}
+                                <label class="form-label fw-bold">Граница нормы {{ labels[i] }}</label>
+                                <input type="number" class="form-control"
+                                       name="norm_bound_{{ i }}"
+                                       step="0.01" value="1.0" required>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-custom btn-lg">
+                        Построить все полярные диаграммы (6 временных точек)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if polar_plot_data %}
+    <div class="graph-container">
+        <h3 class="text-center mb-4">Полярные диаграммы</h3>
+        <img src="data:image/png;base64,{{ polar_plot_data }}" class="img-fluid">
+    </div>
+    {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function randomizeValues() {
+        const inputs = document.querySelectorAll('input[name^="v0_"]');
+        inputs.forEach(input => {
+            input.value = Math.random().toFixed(2);
+        });
+    }
+</script>
+</body>
+</html>
