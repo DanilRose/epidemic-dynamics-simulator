@@ -2,9 +2,6 @@
 
 > 📊 An interactive web-based simulator for modeling the dynamics of epidemic spread using nonlinear differential equations and real-time visualization.
 
-![Screenshot](https://via.placeholder.com/800x400/333/fff?text=Simulator+Interface)  
-*(Replace with actual screenshot later)*
-
 ---
 
 ## 🌟 Features
@@ -30,7 +27,7 @@ The simulator solves a system of 15 coupled ordinary differential equations (ODE
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️Stack
 
 - **Python 3.8+**
 - **Flask** — Web framework
@@ -45,7 +42,9 @@ The simulator solves a system of 15 coupled ordinary differential equations (ODE
 ## 📁 Project Structure
 ``
 epidemic-dynamics-simulator/
+``
 ├── app.py 
+``
 ├── requirements.txt 
 ├── README.md 
 ├── Profile 
