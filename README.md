@@ -43,3 +43,15 @@ The simulator solves a system of 15 coupled ordinary differential equations (ODE
 ---
 
 ## 📁 Project Structure
+
+epidemic-dynamics-simulator/
+├── app.py               
+├── requirements.txt     
+├── README.md            
+├── Profile              
+├── static/
+│   └── css/
+│       └── styles.css   
+├── templates/
+    └── index.html       
+         
