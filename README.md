@@ -67,7 +67,7 @@ python app.py
 3. Open your local server
    
 ---
-## 📬 Автор
+## 📬 Author
 - DanilRose 👤
 - totkto49@gmail.com 📧 
 
