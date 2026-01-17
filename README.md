@@ -68,6 +68,6 @@ python app.py
    
 ---
 
-👤 - DanilRose
-📧 - totkto49@gmail.com
+- DanilRose
+- totkto49@gmail.com
 
