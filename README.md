@@ -52,3 +52,22 @@ epidemic-dynamics-simulator/
 └── templates/
 └── index.html 
 ```
+
+---
+
+## 🚀 How to Run
+
+1. **Install dependencies** using `requirements.txt`:
+```bash
+pip install -r requirements.txt
+```
+2. Start the server:
+```bash
+python app.py
+```
+3. Open your local server
+
+📬 Author
+👤 DanilRose
+📧 totkto49@gmail.com
+
