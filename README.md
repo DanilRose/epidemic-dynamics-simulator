@@ -52,7 +52,6 @@ epidemic-dynamics-simulator/
 └── templates/
 └── index.html 
 ```
-
 ---
 
 ## 🚀 How to Run
@@ -66,8 +65,9 @@ pip install -r requirements.txt
 python app.py
 ```
 3. Open your local server
+   
+---
 
-📬 Author
 👤 DanilRose
 📧 totkto49@gmail.com
 
